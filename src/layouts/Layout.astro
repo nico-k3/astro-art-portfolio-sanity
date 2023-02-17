@@ -1,20 +1,27 @@
 ---
-import { SEO_INFO } from '../consts';
-
 type Props = { title: string };
 
 const { title } = Astro.props;
+
+let QUERY = encodeURIComponent(`*[_type == "settings"]`);
+const date = new Date().toISOString().substring(0, 10);
+const url = `https://${import.meta.env.SANITY_PROJECT_ID}.api.sanity.io/v${date}/data/query/${import.meta.env.SANITY_DATASET}?query=${QUERY}`;
+const response = await fetch(url);
+const data = await response.json();
+const seo = data.result[0].seo;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    {SEO_INFO.map((tag) => <meta name={tag.name} content={tag.content} />)}
+    <meta name="author" content={seo.author} />
+    <meta name="description" content={seo.description} />
+    <meta name="keywords" content={seo.keywords} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
+    <title>{title || seo.title}</title>
   </head>
   <body class="bg-slate-50 dark:bg-slate-800">
     <slot />

@@ -3,39 +3,45 @@ import { Img } from 'astro-imagetools/components';
 import probe from 'probe-image-size';
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
-import { PERSONAL_INFO } from '../consts';
-import { getNotionItems } from '../utils';
+import { PERSONAL_INFO, SEO_INFO } from '../consts';
 
-const notionItems = await getNotionItems({
-  auth: import.meta.env.NOTION_API_KEY,
-});
+let QUERY = encodeURIComponent(`*[_type == "art"] | order(_createdAt desc) {name, "imageUrl": image.asset->url, image}`);
+const date = new Date().toISOString().substring(0, 10);
+let url = `https://${import.meta.env.SANITY_PROJECT_ID}.api.sanity.io/v${date}/data/query/${import.meta.env.SANITY_DATASET}?query=${QUERY}`;
+const response = await fetch(url);
+const data = await response.json();
 
 const images = await Promise.all(
-  notionItems.map(async ({ plain_text }) => {
-    const index = plain_text.lastIndexOf(' ');
-    const label = plain_text.substring(0, index);
-    const href = plain_text.substring(index + 1);
-    const size = await probe(href);
+  data.result.map(async (img) => {
+    const size = await probe(img.imageUrl);
 
-    return { label, href, size };
+    return { name: img.name,
+  imageUrl: img.imageUrl, size };
   }),
 );
+
+QUERY = encodeURIComponent(`*[_type == "settings"]`);
+url = `https://${import.meta.env.SANITY_PROJECT_ID}.api.sanity.io/v${date}/data/query/${import.meta.env.SANITY_DATASET}?query=${QUERY}`;
+const settingsResponse = await fetch(url);
+const settingsData = await settingsResponse.json();
+const title = settingsData.result[0].title
+const subtitle = settingsData.result[0].subtitle
+
 ---
 
-<Layout title={PERSONAL_INFO.title}>
+<Layout title={title}>
   <div class="py-4 sm:py-6 lg:py-8 flex flex-col justify-between h-screen">
     <main class="mb-auto">
       <div class="my-8 sm:my-12">
         <h2
           class="text-gray-800 dark:text-white text-2xl md:text-3xl lg:text-4xl text-center mb-4 md:mb-6 font-semibold"
         >
-          {PERSONAL_INFO.title}
+          {title}
         </h2>
-
         <p
           class="max-w-screen-md dark:text-slate-400 text-gray-500 md:text-lg text-center mx-auto"
         >
-          {PERSONAL_INFO.subtitle}
+          {subtitle}
         </p>
       </div>
 
@@ -47,7 +53,7 @@ const images = await Promise.all(
           {
             images.map((image) => (
               <a
-                href={image.href}
+                href={image.imageUrl}
                 data-cropped="true"
                 data-pswp-width={image.size.width}
                 data-pswp-height={image.size.height}
@@ -55,17 +61,17 @@ const images = await Promise.all(
               >
                 <div class="w-full h-full flex object-cover object-center absolute inset-0 group-hover:scale-110 transition duration-200 text-transparent">
                   <Img
-                    src={image.href}
-                    alt={image.label}
+                    src={image.imageUrl}
+                    alt={image.name}
                     format="webp"
-                    width={image.size.width / 3}
+                    width={650}
                   />
                 </div>
 
                 <div class="bg-gradient-to-t from-black via-transparent to-transparent opacity-20 absolute inset-0 pointer-events-none group-hover:opacity-0 transition duration-200" />
 
                 <span class="inline-block text-gray-200 text-xs md:text-sm border border-gray-500 rounded-lg backdrop-blur relative px-2 md:px-3 py-1 mr-3 mb-3 group-hover:opacity-0 transition duration-200">
-                  {image.label}
+                  {image.name}
                 </span>
               </a>
             ))
