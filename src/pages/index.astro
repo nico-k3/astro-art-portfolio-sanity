@@ -3,7 +3,6 @@ import { Img } from 'astro-imagetools/components';
 import probe from 'probe-image-size';
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
-import { PERSONAL_INFO, SEO_INFO } from '../consts';
 
 let QUERY = encodeURIComponent(`*[_type == "art"] | order(_createdAt desc) {name, "imageUrl": image.asset->url, image}`);
 const date = new Date().toISOString().substring(0, 10);
@@ -11,9 +10,22 @@ let url = `https://${import.meta.env.SANITY_PROJECT_ID}.api.sanity.io/v${date}/d
 const response = await fetch(url);
 const data = await response.json();
 
+interface accessibleImage {
+  _type: 'accessibleImage',
+  alt: string,
+  asset: {
+    _ref: string,
+    _type: 'reference'
+  }
+  imageUrl: string,
+  name: string
+}
+
 const images = await Promise.all(
-  data.result.map(async (img) => {
+  data.result.map(async (img:accessibleImage) => {
     const size = await probe(img.imageUrl);
+
+    console.log(img)
 
     return { name: img.name,
   imageUrl: img.imageUrl, size };

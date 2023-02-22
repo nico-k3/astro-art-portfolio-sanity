@@ -11,15 +11,22 @@ const response = await fetch(url);
 const data = await response.json();
 const socialMedia = data.result[0].socialMedia;
 const name = data.result[0].name;
-console.log(socialMedia)
+
+interface Social {
+  _key: string,
+  _type: string,
+  icon: string,
+  label: string,
+  link: string
+}
 ---
 
 <footer>
   <div class="flex flex-col items-center mt-12 gap-4 mb-4">
     <div class="flex gap-4">
       {
-        socialMedia.map((social) => (
-          <a href={social.href} target="_blank">
+        socialMedia.map((social:Social) => (
+          <a href={social.link} target="_blank">
             <Icon
               name={social.icon}
               aria-label={social.label}
