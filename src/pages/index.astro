@@ -586,7 +586,13 @@ const options: ISourceOptions = {
       await loadFull(tsParticles);
   })();
 </script>
+<style>
+  .particles{
+    display: none;
+  }
+</style>
 <Layout title={title}>
+  <div class="particles"><Particles id="tsparticles" options={options} /></div>
   <div class="py-4 sm:py-6 lg:py-8 flex flex-col justify-between h-screen">
     <main class="mb-auto">
       <div class="my-8 sm:my-12">
@@ -638,5 +644,4 @@ const options: ISourceOptions = {
     </main>
     <Footer />
   </div>
-  <Particles id="tsparticles" options={options} />
 </Layout>
