@@ -43,13 +43,8 @@ const options: ISourceOptions = {
   "autoPlay": true,
   "background": {
     "color": {
-      "value": "#000000"
+      "value": "#232741"
     },
-    "image": "",
-    "position": "50% 50%",
-    "repeat": "no-repeat",
-    "size": "cover",
-    "opacity": 1
   },
   "backgroundMask": {
     "composite": "destination-out",
@@ -65,7 +60,7 @@ const options: ISourceOptions = {
   "delay": 0,
   "fullScreen": {
     "enable": true,
-    "zIndex": -1
+    "zIndex": 1
   },
   "detectRetina": true,
   "duration": 0,
@@ -75,7 +70,7 @@ const options: ISourceOptions = {
     "events": {
       "onClick": {
         "enable": true,
-        "mode": "push"
+        "mode": "repulse"
       },
       "onDiv": {
         "selectors": [],
@@ -85,10 +80,10 @@ const options: ISourceOptions = {
       },
       "onHover": {
         "enable": true,
-        "mode": "grab",
+        "mode": "bubble",
         "parallax": {
-          "enable": true,
-          "force": 60,
+          "enable": false,
+          "force": 2,
           "smooth": 10
         }
       },
@@ -110,11 +105,11 @@ const options: ISourceOptions = {
         "distance": 200
       },
       "bubble": {
-        "distance": 400,
+        "distance": 250,
         "duration": 2,
         "mix": false,
-        "opacity": 0.8,
-        "size": 40,
+        "opacity": 0,
+        "size": 0,
         "divs": {
           "distance": 200,
           "duration": 0.4,
@@ -146,7 +141,7 @@ const options: ISourceOptions = {
         "quantity": 2
       },
       "repulse": {
-        "distance": 200,
+        "distance": 400,
         "duration": 0.4,
         "factor": 100,
         "speed": 1,
@@ -277,12 +272,13 @@ const options: ISourceOptions = {
         "enable": false,
         "rotate": {
           "x": 600,
-          "y": 1200
+          "y": 600
         }
       },
       "center": {
         "x": 50,
         "y": 50,
+        "mode": "percent",
         "radius": 0
       },
       "decay": 0,
@@ -315,9 +311,9 @@ const options: ISourceOptions = {
         "right": "out",
         "top": "out"
       },
-      "random": false,
+      "random": true,
       "size": false,
-      "speed": 2,
+      "speed": 1,
       "spin": {
         "acceleration": 0,
         "enable": false
@@ -338,7 +334,7 @@ const options: ISourceOptions = {
         "height": 1080
       },
       "limit": 0,
-      "value": 100
+      "value": 160
     },
     "opacity": {
       "random": {
@@ -346,18 +342,18 @@ const options: ISourceOptions = {
         "minimumValue": 0.1
       },
       "value": {
-        "min": 0.1,
-        "max": 0.5
+        "min": 0,
+        "max": 1
       },
       "animation": {
         "count": 0,
         "enable": true,
-        "speed": 3,
+        "speed": 1,
         "decay": 0,
         "sync": false,
         "destroy": "none",
         "startValue": "random",
-        "minimumValue": 0.1
+        "minimumValue": 0
       }
     },
     "reduceDuplicates": false,
@@ -382,18 +378,18 @@ const options: ISourceOptions = {
         "minimumValue": 1
       },
       "value": {
-        "min": 0.1,
-        "max": 10
+        "min": 1,
+        "max": 3
       },
       "animation": {
         "count": 0,
-        "enable": true,
-        "speed": 20,
+        "enable": false,
+        "speed": 4,
         "decay": 0,
         "sync": false,
         "destroy": "none",
         "startValue": "random",
-        "minimumValue": 0.1
+        "minimumValue": 0.3
       }
     },
     "stroke": {
@@ -543,7 +539,7 @@ const options: ISourceOptions = {
       },
       "consent": false,
       "distance": 150,
-      "enable": true,
+      "enable": false,
       "frequency": 1,
       "opacity": 0.4,
       "shadow": {
